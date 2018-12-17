@@ -65,20 +65,28 @@ def predict():
     )
     model = tf.estimator.DNNClassifier(
         model_dir='model/',
-        hidden_units=[10,10],
+        hidden_units=[10, 10],
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
-        optimizer=tf.train.ProximalAdagradOptimizer(
-            learning_rate=0.1,
-            l1_regularization_strength=0.001
-        ))
+        # optimizer=tf.train.ProximalAdagradOptimizer(
+        #     learning_rate=0.1,
+        #     l1_regularization_strength=0.001
+        # )
+    )
     predictions = list(model.predict(input_fn=test_input_fn))
-    print(origin_test_data)
+    print(predictions)
+    correct, total = (0.0, 0.0)
     for i, prediction in enumerate(predictions):
-        origin_test_data[str(i)]['expected'] = prediction['probabilities'][1]
+        origin_test_data[i]['expected'] = int(prediction['classes'][0])
+        origin_test_data[i]['prob'] = max(list(prediction['probabilities']))
+        if origin_test_data[i]['expected'] == int(origin_test_data[i]['result']) and origin_test_data[i]['prob'] > 0.7:
+            correct += 1
+        total += 1
     df = pd.DataFrame(origin_test_data)
-    print(df[['match', 'expected', 'result', 'diff']])
+    print(correct)
+    print(total)
+    print(df[['match', 'prob', 'expected', 'result', 'diff']])
     # print(df[['player_name', 'is_goal', 'xG']])
     # print(df.groupby('player_name').sum())
 
@@ -132,14 +140,15 @@ def main(argv):
 
     model = tf.estimator.DNNClassifier(
         model_dir='model/',
-        hidden_units=[10,10],
+        hidden_units=[10, 10],
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
-        optimizer=tf.train.ProximalAdagradOptimizer(
-            learning_rate=0.01,
-            l1_regularization_strength=0.001
-        ))
+        # optimizer=tf.train.ProximalAdagradOptimizer(
+        #     learning_rate=0.01,
+        #     l1_regularization_strength=0.001
+        # )
+    )
 
     with open('training-log.csv', 'w') as stream:
         csvwriter = csv.writer(stream)
@@ -150,7 +159,7 @@ def main(argv):
 
             predictions = list(model.predict(input_fn=test_input_fn))
 
-            csvwriter.writerow([(i + 1) * 100, evaluation_result['accuracy'], evaluation_result['average_loss'],])
+            csvwriter.writerow([(i + 1) * 100, evaluation_result['accuracy'], evaluation_result['average_loss'], ])
 
 
 if __name__ == '__main__':
