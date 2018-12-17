@@ -80,7 +80,7 @@ def predict():
     for i, prediction in enumerate(predictions):
         origin_test_data[i]['expected'] = int(prediction['classes'][0])
         origin_test_data[i]['prob'] = max(list(prediction['probabilities']))
-        if origin_test_data[i]['expected'] == int(origin_test_data[i]['result']) and origin_test_data[i]['prob'] > 0.7:
+        if origin_test_data[i]['expected'] == int(origin_test_data[i]['result']) and origin_test_data[i]['prob'] > 0:
             correct += 1
         total += 1
     df = pd.DataFrame(origin_test_data)
@@ -163,6 +163,6 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    tf.logging.set_verbosity(tf.logging.INFO)
-    tf.app.run(main=main)
+    # tf.logging.set_verbosity(tf.logging.INFO)
+    # tf.app.run(main=main)
     predict()
