@@ -6,7 +6,7 @@ import pandas as pd
 import tensorflow as tf
 
 TRAINING_SET_FRACTION = 0.95
-HIDDEN_UNITS = [44, 10]
+HIDDEN_UNITS = [10, 10]
 num_columns = ['DispossessedInD3rdPerAttack',
                'DispossessedPerAttack',
                'DribblePerAttack',
@@ -76,7 +76,7 @@ def predict():
         # )
     )
     predictions = list(model.predict(input_fn=test_input_fn))
-    print(predictions)
+    # print(predictions)
     correct, total = (0.0, 0.0)
     for i, prediction in enumerate(predictions):
         origin_test_data[i]['expected'] = int(prediction['classes'][0])
@@ -164,6 +164,6 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    tf.logging.set_verbosity(tf.logging.INFO)
-    tf.app.run(main=main)
+    # tf.logging.set_verbosity(tf.logging.INFO)
+    # tf.app.run(main=main)
     predict()
