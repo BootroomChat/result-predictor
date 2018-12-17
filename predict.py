@@ -6,6 +6,7 @@ import pandas as pd
 import tensorflow as tf
 
 TRAINING_SET_FRACTION = 0.95
+HIDDEN_UNITS = [44, 10]
 num_columns = ['DispossessedInD3rdPerAttack',
                'DispossessedPerAttack',
                'DribblePerAttack',
@@ -65,7 +66,7 @@ def predict():
     )
     model = tf.estimator.DNNClassifier(
         model_dir='model/',
-        hidden_units=[10, 10],
+        hidden_units=HIDDEN_UNITS,
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
@@ -140,7 +141,7 @@ def main(argv):
 
     model = tf.estimator.DNNClassifier(
         model_dir='model/',
-        hidden_units=[10, 10],
+        hidden_units=HIDDEN_UNITS,
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
@@ -163,6 +164,6 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    # tf.logging.set_verbosity(tf.logging.INFO)
-    # tf.app.run(main=main)
+    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.app.run(main=main)
     predict()
