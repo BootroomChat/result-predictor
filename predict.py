@@ -65,7 +65,7 @@ def predict():
     )
     model = tf.estimator.DNNClassifier(
         model_dir='model/',
-        hidden_units=[100],
+        hidden_units=[10,10],
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
@@ -132,12 +132,12 @@ def main(argv):
 
     model = tf.estimator.DNNClassifier(
         model_dir='model/',
-        hidden_units=[10],
+        hidden_units=[10,10],
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
         optimizer=tf.train.ProximalAdagradOptimizer(
-            learning_rate=0.1,
+            learning_rate=0.01,
             l1_regularization_strength=0.001
         ))
 
@@ -149,10 +149,8 @@ def main(argv):
             evaluation_result = model.evaluate(input_fn=test_input_fn)
 
             predictions = list(model.predict(input_fn=test_input_fn))
-            prediction_result = betting.test_betting_stategy(predictions, test_features, test_labels)
 
-            csvwriter.writerow([(i + 1) * 100, evaluation_result['accuracy'], evaluation_result['average_loss'],
-                                prediction_result['performance']])
+            csvwriter.writerow([(i + 1) * 100, evaluation_result['accuracy'], evaluation_result['average_loss'],])
 
 
 if __name__ == '__main__':
