@@ -6,29 +6,31 @@ import pandas as pd
 import tensorflow as tf
 
 TRAINING_SET_FRACTION = 0.95
-HIDDEN_UNITS = [10, 10]
-num_columns = ['DispossessedInD3rdPerAttack',
-               'DispossessedPerAttack',
-               'DribblePerAttack',
-               'ForwardPassMeterPerAttack',
-               'ForwardPassPerAttack',
-               'FouledPerAttack',
-               'KeyPassPerAttack',
-               'PassCrossAccuratePerAttack',
-               'PassLeadingKpPerAttack',
-               'PassPerAttack',
-               'ShotPerAttack',
-               'SuccessPassPerAttack',
-               'SuccessfulPassToA3rdPerAttack',
-               'TurnoverPerAttack',
-               'UnSuccessPassPerAttack',
-               'AerialLossPerDefense',
-               'AerialWonPerDefense',
-               'ClearPerDefense',
-               'FoulPerDefense',
-               'InterceptionsPerDefense',
-               'SavePerDefense',
-               'TacklesPerDefense']
+HIDDEN_UNITS = [10]
+num_columns = [
+    'DispossessedInD3rdPerAttack',
+    'DispossessedPerAttack',
+    'DribblePerAttack',
+    'ForwardPassMeterPerAttack',
+    'ForwardPassPerAttack',
+    'FouledPerAttack',
+    'KeyPassPerAttack',
+    'PassCrossAccuratePerAttack',
+    'PassLeadingKpPerAttack',
+    'PassPerAttack',
+    'ShotPerAttack',
+    'SuccessPassPerAttack',
+    'SuccessfulPassToA3rdPerAttack',
+    'TurnoverPerAttack',
+    'UnSuccessPassPerAttack',
+    'AerialLossPerDefense',
+    'AerialWonPerDefense',
+    'ClearPerDefense',
+    'FoulPerDefense',
+    'InterceptionsPerDefense',
+    'SavePerDefense',
+    'TacklesPerDefense'
+]
 category_columns = []
 
 
@@ -81,7 +83,7 @@ def predict():
     for i, prediction in enumerate(predictions):
         origin_test_data[i]['expected'] = int(prediction['classes'][0])
         origin_test_data[i]['prob'] = max(list(prediction['probabilities']))
-        if origin_test_data[i]['expected'] == int(origin_test_data[i]['result']) and origin_test_data[i]['prob'] > 0:
+        if origin_test_data[i]['expected'] == int(origin_test_data[i]['result']) and origin_test_data[i]['prob'] > 0.8:
             correct += 1
         total += 1
     df = pd.DataFrame(origin_test_data)
