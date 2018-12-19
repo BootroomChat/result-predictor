@@ -6,7 +6,7 @@ import pandas as pd
 import tensorflow as tf
 
 TRAINING_SET_FRACTION = 0.95
-HIDDEN_UNITS = [10]
+HIDDEN_UNITS = [44,44]
 num_columns = [
     'DispossessedInD3rdPerAttack',
     'DispossessedPerAttack',
@@ -72,10 +72,9 @@ def predict():
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
-        # optimizer=tf.train.ProximalAdagradOptimizer(
-        #     learning_rate=0.1,
-        #     l1_regularization_strength=0.001
-        # )
+        optimizer=tf.contrib.estimator.clip_gradients_by_norm(tf.train.AdagradOptimizer(
+            learning_rate=0.3,
+        ), 3.0)
     )
     predictions = list(model.predict(input_fn=test_input_fn))
     # print(predictions)
@@ -83,7 +82,7 @@ def predict():
     for i, prediction in enumerate(predictions):
         origin_test_data[i]['expected'] = int(prediction['classes'][0])
         origin_test_data[i]['prob'] = max(list(prediction['probabilities']))
-        if origin_test_data[i]['expected'] == int(origin_test_data[i]['result']) and origin_test_data[i]['prob'] > 0.8:
+        if origin_test_data[i]['expected'] == int(origin_test_data[i]['result']) and origin_test_data[i]['prob'] > 0:
             correct += 1
         total += 1
     df = pd.DataFrame(origin_test_data)
@@ -147,10 +146,9 @@ def main(argv):
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
-        # optimizer=tf.train.ProximalAdagradOptimizer(
+        # optimizer=tf.contrib.estimator.clip_gradients_by_norm(tf.train.AdagradOptimizer(
         #     learning_rate=0.01,
-        #     l1_regularization_strength=0.001
-        # )
+        # ), 3.0)
     )
 
     with open('training-log.csv', 'w') as stream:
@@ -166,6 +164,6 @@ def main(argv):
 
 
 if __name__ == '__main__':
-    # tf.logging.set_verbosity(tf.logging.INFO)
-    # tf.app.run(main=main)
+    tf.logging.set_verbosity(tf.logging.INFO)
+    tf.app.run(main=main)
     predict()
