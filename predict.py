@@ -1,38 +1,11 @@
 import csv
 import json
+import sys
 
+from predict_config import *
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-
-TRAINING_SET_FRACTION = 0.95
-HIDDEN_UNITS = [10]
-OPTIMIZER = "Adam"
-num_columns = [
-    # 'DispossessedInD3rdPerAttack',
-    # 'DispossessedPerAttack',
-    # 'DribblePerAttack',
-    'ForwardPassMeterPerAttack',
-    'ForwardPassPerAttack',
-    # 'FouledPerAttack',
-    'KeyPassPerAttack',
-    # 'PassCrossAccuratePerAttack',
-    # 'PassLeadingKpPerAttack',
-    'PassPerAttack',
-    'ShotPerAttack',
-    'SuccessPassPerAttack',
-    # 'SuccessfulPassToA3rdPerAttack',
-    'TurnoverPerAttack',
-    # 'UnSuccessPassPerAttack',
-    # 'AerialLossPerDefense',
-    'AerialWonPerDefense',
-    'ClearPerDefense',
-    # 'FoulPerDefense',
-    'InterceptionsPerDefense',
-    # 'SavePerDefense',
-    'TacklesPerDefense'
-]
-category_columns = []
 
 
 def map_results(results):
@@ -161,5 +134,7 @@ def main(argv):
 
 if __name__ == '__main__':
     tf.logging.set_verbosity(tf.logging.INFO)
-    tf.app.run(main=main)
-    predict()
+    if len(sys.argv) < 2 or sys.argv[1] == 'predict':
+        predict()
+    else:
+        tf.app.run(main=main)
