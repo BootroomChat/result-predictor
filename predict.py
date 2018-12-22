@@ -2,30 +2,9 @@ import csv
 import json
 import sys
 
-from predict_config import *
-import numpy as np
 import pandas as pd
-import tensorflow as tf
 
-
-def map_results(results):
-    features = {}
-
-    for result in results:
-        for key in result.keys():
-            if key not in features:
-                features[key] = []
-
-            features[key].append(result[key])
-
-    for key in features.keys():
-        features[key] = np.array(features[key])
-
-    return features, features['result']
-
-
-def parse_data(data):
-    return data
+from predict_config import *
 
 
 def predict():
@@ -62,18 +41,6 @@ def predict():
     # print(df[['match', 'prob', 'expected', 'result', 'diff']])
     # print(df[['player_name', 'is_goal', 'xG']])
     # print(df.groupby('player_name').sum())
-
-
-def feature_columns():
-    feature_columns = []
-    for key in num_columns:
-        feature_columns.append(tf.feature_column.numeric_column(key + '0'))
-        feature_columns.append(tf.feature_column.numeric_column(key + '1'))
-
-    for key in category_columns:
-        category_column = tf.feature_column.categorical_column_with_vocabulary_list(key, ['0', '1'])
-        feature_columns.append(tf.feature_column.indicator_column(category_column))
-    return feature_columns
 
 
 def load_json(file_name):

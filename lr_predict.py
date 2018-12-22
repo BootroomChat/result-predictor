@@ -1,10 +1,7 @@
-import os
-import sys
-
-sys.path.insert(1, os.path.join(sys.path[0], '..'))
-from xt_util import *
 from sklearn.externals import joblib
 from sklearn.linear_model import LogisticRegressionCV
+
+from ..xt_util import *
 
 num_columns = [
     'DispossessedInD3rdPerAttack',
