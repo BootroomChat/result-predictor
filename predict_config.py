@@ -3,7 +3,7 @@ import numpy as np
 import tensorflow as tf
 
 TRAINING_SET_FRACTION = 0.95
-HIDDEN_UNITS = [36]
+HIDDEN_UNITS = [38]
 OPTIMIZER = "Adam"
 
 num_columns = [
