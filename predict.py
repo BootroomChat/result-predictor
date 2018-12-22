@@ -6,29 +6,30 @@ import pandas as pd
 import tensorflow as tf
 
 TRAINING_SET_FRACTION = 0.95
-HIDDEN_UNITS = [44,44]
+HIDDEN_UNITS = [10]
+OPTIMIZER = "Adam"
 num_columns = [
-    'DispossessedInD3rdPerAttack',
-    'DispossessedPerAttack',
-    'DribblePerAttack',
+    # 'DispossessedInD3rdPerAttack',
+    # 'DispossessedPerAttack',
+    # 'DribblePerAttack',
     'ForwardPassMeterPerAttack',
     'ForwardPassPerAttack',
-    'FouledPerAttack',
+    # 'FouledPerAttack',
     'KeyPassPerAttack',
-    'PassCrossAccuratePerAttack',
-    'PassLeadingKpPerAttack',
+    # 'PassCrossAccuratePerAttack',
+    # 'PassLeadingKpPerAttack',
     'PassPerAttack',
     'ShotPerAttack',
     'SuccessPassPerAttack',
-    'SuccessfulPassToA3rdPerAttack',
+    # 'SuccessfulPassToA3rdPerAttack',
     'TurnoverPerAttack',
-    'UnSuccessPassPerAttack',
-    'AerialLossPerDefense',
+    # 'UnSuccessPassPerAttack',
+    # 'AerialLossPerDefense',
     'AerialWonPerDefense',
     'ClearPerDefense',
-    'FoulPerDefense',
+    # 'FoulPerDefense',
     'InterceptionsPerDefense',
-    'SavePerDefense',
+    # 'SavePerDefense',
     'TacklesPerDefense'
 ]
 category_columns = []
@@ -72,9 +73,7 @@ def predict():
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
-        optimizer=tf.contrib.estimator.clip_gradients_by_norm(tf.train.AdagradOptimizer(
-            learning_rate=0.3,
-        ), 3.0)
+        optimizer=OPTIMIZER
     )
     predictions = list(model.predict(input_fn=test_input_fn))
     # print(predictions)
@@ -86,9 +85,8 @@ def predict():
             correct += 1
         total += 1
     df = pd.DataFrame(origin_test_data)
-    print(correct)
-    print(total)
-    print(df[['match', 'prob', 'expected', 'result', 'diff']])
+    print(correct, total, float(correct) / total)
+    # print(df[['match', 'prob', 'expected', 'result', 'diff']])
     # print(df[['player_name', 'is_goal', 'xG']])
     # print(df.groupby('player_name').sum())
 
@@ -146,9 +144,7 @@ def main(argv):
         feature_columns=feature_columns(),
         n_classes=3,
         label_vocabulary=['0', '1', '2'],
-        # optimizer=tf.contrib.estimator.clip_gradients_by_norm(tf.train.AdagradOptimizer(
-        #     learning_rate=0.01,
-        # ), 3.0)
+        optimizer=OPTIMIZER
     )
 
     with open('training-log.csv', 'w') as stream:
