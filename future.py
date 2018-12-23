@@ -1,8 +1,9 @@
+import pandas as pd
+from dateutil.parser import parse
 from sklearn.externals import joblib
 from sklearn.linear_model import LogisticRegressionCV
 
 from predict_config import *
-from ..xt_util import *
 
 keys = [y for x in [[k + i for k in num_columns] for i in ['0', '1']] for y in x]
 lr: LogisticRegressionCV = joblib.load('LogisticRegression.pkl')
@@ -11,6 +12,7 @@ lr: LogisticRegressionCV = joblib.load('LogisticRegression.pkl')
 def predict():
     data = load_json('future.json')
     for i, item in enumerate(data):
+        print(i, item['match'])
         data[i] = predict_by_lr(item)
         data[i] = predict_by_nn(data[i])
     write_json('future.json', data)
@@ -37,17 +39,35 @@ def predict_by_nn(item):
         optimizer=OPTIMIZER
     )
     prediction = list(model.predict(input_fn=test_input_fn))[0]
-    item['lr_prob_win'], item['lr_prob_draw'], item['lr_prob_lose'] = prediction['probabilities']
-    item['lr_predict'] = prediction['classes'][0]
+    item['lr_prob_win'], item['lr_prob_draw'], item['lr_prob_lose'] = [float(prob) for prob in
+                                                                       prediction['probabilities']]
+    item['lr_predict'] = str(int(prediction['classes'][0]))
     return item
 
 
 def predict_by_lr(item):
     item_df = pd.DataFrame([item])
-    item['lr_prob_win'], item['lr_prob_draw'], item['lr_prob_lose'] = lr.predict_proba(item_df[keys])[0]
-    item['lr_predict'] = lr.predict(item_df[keys])[0]
+    item['lr_prob_win'], item['lr_prob_draw'], item['lr_prob_lose'] = [float(prob) for prob in
+                                                                       lr.predict_proba(item_df[keys])[0]]
+    item['lr_predict'] = str(int(lr.predict(item_df[keys])[0]))
     return item
 
 
+def reformat():
+    data = load_json('future.json')
+    result = []
+    for i, item in enumerate(data):
+        new_item = {'homePreStats': {}, 'awayPreStats': {},
+                    'timestamp': parse("{0} {1} +0000".format(item['date'], item['time'])).timestamp()}
+        for key, value in item.items():
+            if key in keys:
+                new_item['homePreStats' if key.endswith('0') else 'awayPreStats'][key[:-1]] = value
+            else:
+                new_item[key] = value
+        result.append(new_item)
+    write_json('schedule.json', result)
+
+
 if __name__ == '__main__':
-    predict()
+    # predict()
+    reformat()

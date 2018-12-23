@@ -1,9 +1,10 @@
-import numpy as np
+import json
 
+import numpy as np
 import tensorflow as tf
 
 TRAINING_SET_FRACTION = 0.95
-HIDDEN_UNITS = [38]
+HIDDEN_UNITS = [44]
 OPTIMIZER = "Adam"
 
 num_columns = [
@@ -65,3 +66,19 @@ def feature_columns():
         category_column = tf.feature_column.categorical_column_with_vocabulary_list(key, ['0', '1'])
         feature_columns.append(tf.feature_column.indicator_column(category_column))
     return feature_columns
+
+
+def load_json(file_name):
+    try:
+        with open(file_name, encoding="utf-8") as json_data:
+            d = json.load(json_data)
+            return d
+    except Exception as e:
+        print(e)
+        return {}
+
+
+def write_json(file_name, json_data):
+    with open(file_name, 'w') as outfile:
+        json.dump(json_data, outfile, ensure_ascii=False)
+        return json_data

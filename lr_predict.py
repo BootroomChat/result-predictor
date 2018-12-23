@@ -1,7 +1,7 @@
 from sklearn.externals import joblib
 from sklearn.linear_model import LogisticRegressionCV
 
-from ..xt_util import *
+from predict_config import *
 
 num_columns = [
     'DispossessedInD3rdPerAttack',
