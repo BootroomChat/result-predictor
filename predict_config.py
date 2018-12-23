@@ -41,6 +41,8 @@ def map_results(results):
 
     for result in results:
         for key in result.keys():
+            if isinstance(result[key], dict) or isinstance(result[key], list):
+                continue
             if key not in features:
                 features[key] = []
 

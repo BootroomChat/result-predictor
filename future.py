@@ -13,6 +13,8 @@ def predict():
     data = load_json('future.json')
     for i, item in enumerate(data):
         print(i, item['match'])
+        if num_columns[0] + '1' not in item or num_columns[0] + '0' not in item:
+            continue
         data[i] = predict_by_lr(item)
         data[i] = predict_by_nn(data[i])
     write_json('future.json', data)
@@ -39,9 +41,9 @@ def predict_by_nn(item):
         optimizer=OPTIMIZER
     )
     prediction = list(model.predict(input_fn=test_input_fn))[0]
-    item['lr_prob_win'], item['lr_prob_draw'], item['lr_prob_lose'] = [float(prob) for prob in
+    item['nn_prob_win'], item['nn_prob_draw'], item['nn_prob_lose'] = [float(prob) for prob in
                                                                        prediction['probabilities']]
-    item['lr_predict'] = str(int(prediction['classes'][0]))
+    item['nn_predict'] = str(int(prediction['classes'][0]))
     return item
 
 
@@ -58,7 +60,7 @@ def reformat():
     result = []
     for i, item in enumerate(data):
         new_item = {'homePreStats': {}, 'awayPreStats': {},
-                    'timestamp': parse("{0} {1} +0000".format(item['date'], item['time'])).timestamp()}
+                    'timestamp': int(parse("{0} {1} +0000".format(item['date'], item['time'])).timestamp())}
         for key, value in item.items():
             if key in keys:
                 new_item['homePreStats' if key.endswith('0') else 'awayPreStats'][key[:-1]] = value

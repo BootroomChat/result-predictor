@@ -31,7 +31,7 @@ def leancloud_object(name, data, id_key='id'):
 def update_data():
     object_data = {
         #  'Tweets': {'data': redcafe.new_items, 'id_key': 'id'},
-        "Matches": {'data': [], 'id_key': ''}
+        "Matches": {'data': load_json('schedule.json'), 'id_key': 'match'}
     }
 
     for name, info in object_data.items():
