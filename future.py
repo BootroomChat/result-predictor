@@ -12,9 +12,9 @@ lr: LogisticRegressionCV = joblib.load('LogisticRegression.pkl')
 def predict():
     data = load_json('future.json')
     for i, item in enumerate(data):
-        print(i, item['match'])
         if num_columns[0] + '1' not in item or num_columns[0] + '0' not in item:
             continue
+        print(i, item['match'])
         data[i] = predict_by_lr(item)
         data[i] = predict_by_nn(data[i])
     write_json('future.json', data)
@@ -71,5 +71,5 @@ def reformat():
 
 
 if __name__ == '__main__':
-    # predict()
+    predict()
     reformat()
