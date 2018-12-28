@@ -8,7 +8,6 @@ from predict_config import *
 keys = [y for x in [[k + i for k in num_columns] for i in ['0', '1']] for y in x]
 lr: LogisticRegressionCV = joblib.load('LogisticRegression.pkl')
 
-
 def predict():
     data = load_json('future.json')
     for i, item in enumerate(data):
