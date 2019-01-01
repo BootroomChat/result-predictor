@@ -8,6 +8,7 @@ from predict_config import *
 keys = [y for x in [[k + i for k in num_columns] for i in ['0', '1']] for y in x]
 lr: LogisticRegressionCV = joblib.load('LogisticRegression.pkl')
 
+
 def predict():
     data = load_json('future.json')
     for i, item in enumerate(data):
@@ -40,7 +41,7 @@ def predict_by_nn(item):
         optimizer=OPTIMIZER
     )
     prediction = list(model.predict(input_fn=test_input_fn))[0]
-    item['nn_prob_win'], item['nn_prob_draw'], item['nn_prob_lose'] = [round(float(prob) * 1000)/1000.0 for prob in
+    item['nn_prob_win'], item['nn_prob_draw'], item['nn_prob_lose'] = [round(float(prob) * 1000) / 1000.0 for prob in
                                                                        prediction['probabilities']]
     item['nn_predict'] = str(int(prediction['classes'][0]))
     return item
@@ -48,7 +49,7 @@ def predict_by_nn(item):
 
 def predict_by_lr(item):
     item_df = pd.DataFrame([item])
-    item['lr_prob_win'], item['lr_prob_draw'], item['lr_prob_lose'] = [round(float(prob) * 1000)/1000.0 for prob in
+    item['lr_prob_win'], item['lr_prob_draw'], item['lr_prob_lose'] = [round(float(prob) * 1000) / 1000.0 for prob in
                                                                        lr.predict_proba(item_df[keys])[0]]
     item['lr_predict'] = str(int(lr.predict(item_df[keys])[0]))
     return item
