@@ -1,3 +1,5 @@
+# import comet_ml in the top of your file
+from comet_ml import Experiment
 import csv
 import json
 import sys
@@ -100,6 +102,10 @@ def main(argv):
 
 
 if __name__ == '__main__':
+
+    # Add the following code anywhere in your machine learning file
+    experiment = Experiment(api_key="cYTIiHSXuhTn0D7a3lXRvhETJ",
+                            project_name="general", workspace="chenhang")
     tf.logging.set_verbosity(tf.logging.INFO)
     if len(sys.argv) < 2 or sys.argv[1] == 'predict':
         predict()
